@@ -311,6 +311,7 @@ if st.session_state.sd_page == "Overview":
                 st.markdown('<div class="sd-caption">Total requests</div>', unsafe_allow_html=True)
                 st.markdown(f'<div class="sd-bignum">▲ {total}</div>', unsafe_allow_html=True)
                 st.markdown('<span class="sd-badge-ok">Logged &amp; served</span>', unsafe_allow_html=True)
+                st.caption("Includes the load test plus additional local testing done during development.")
         with r2:
             with st.container(border=True):
                 st.markdown('<div class="sd-caption">Fallback count</div>', unsafe_allow_html=True)
