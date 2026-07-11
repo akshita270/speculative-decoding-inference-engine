@@ -3,4 +3,3 @@ __pycache__/
 *.pyc
 .claude/
 .DS_Store
-observability/metrics_store.csv

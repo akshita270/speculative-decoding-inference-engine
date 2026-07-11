@@ -124,6 +124,13 @@ st.markdown(
     "Speculative Decoding Inference Engine</h2>",
     unsafe_allow_html=True,
 )
+st.markdown(
+    "<p style='text-align:center; color:#8a7ba0; margin-top:0;'>"
+    "Static snapshot from local load tests (Apple M2, MPS) &mdash; not a live inference backend. "
+    "See <a href='https://github.com/akshita270/speculative-decoding-inference-engine#readme' target='_blank'>README</a> "
+    "for setup instructions to run it live.</p>",
+    unsafe_allow_html=True,
+)
 _, search_col, _ = st.columns([1, 2, 1])
 with search_col:
     search = st.text_input(
