@@ -108,16 +108,21 @@ with st.sidebar:
     if st.button("\U0001F512  Limitations", key="nav_about"):
         st.session_state.sd_page = "Limitations"
     st.markdown("---")
-    refresh_seconds = st.slider("Auto-refresh (s)", 2, 30, 5)
+    # Off by default: this deployment reads a static, committed CSV snapshot,
+    # so there's nothing new to pick up on a timer. Repeatedly re-running the
+    # script was also the actual trigger behind crashes on the free hosting
+    # tier (memory pressure builds up across reruns), so opt-in only.
+    enable_autorefresh = st.checkbox("Auto-refresh", value=False)
+    refresh_seconds = st.slider("Auto-refresh (s)", 2, 30, 5, disabled=not enable_autorefresh)
     st.caption(f"Source: {os.path.basename(CSV_PATH)}")
 
-try:
-    from streamlit_autorefresh import st_autorefresh
+if enable_autorefresh:
+    try:
+        from streamlit_autorefresh import st_autorefresh
 
-    st_autorefresh(interval=refresh_seconds * 1000, key="refresh")
-except ImportError:
-    if st.sidebar.button("Refresh now"):
-        st.rerun()
+        st_autorefresh(interval=refresh_seconds * 1000, key="refresh")
+    except ImportError:
+        pass
 
 st.markdown(
     f"<h2 style='text-align:center; margin-bottom:0.3rem; color:{PURPLE_DARK};'>"
