@@ -474,6 +474,6 @@ elif st.session_state.sd_page == "Limitations":
 - Load is simulated (`load_test.py`), not real multi-user traffic.
 - Semantic cache is in-memory only, capped at 500 entries, nothing persists across restarts.
 
-See `README.md` in the project root for full details and measured numbers.
+See [README.md](https://github.com/akshita270/speculative-decoding-inference-engine#readme) for full details and measured numbers.
             """
         )
