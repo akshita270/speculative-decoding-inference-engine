@@ -146,13 +146,23 @@ if not os.path.exists(CSV_PATH) or os.path.getsize(CSV_PATH) == 0:
     st.info("No requests logged yet. Start the API and send some /generate requests, or run load_test.py.")
     st.stop()
 
-df = pd.read_csv(CSV_PATH)
-df["timestamp"] = pd.to_datetime(df["timestamp"])
-df = df.sort_values("timestamp")
+@st.cache_data
+def load_data(csv_path: str, mtime: float) -> pd.DataFrame:
+    # mtime busts the cache when the CSV actually changes, so every page
+    # visit reuses this one parsed copy instead of re-reading and
+    # re-allocating a fresh DataFrame from scratch each time -- the repeated
+    # from-scratch allocation across visits was what exhausted memory on the
+    # free hosting tier.
+    data = pd.read_csv(csv_path)
+    data["timestamp"] = pd.to_datetime(data["timestamp"])
+    data = data.sort_values("timestamp")
+    for col in ("cache_hit", "fallback_triggered"):
+        if data[col].dtype == object:
+            data[col] = data[col].map({"True": True, "False": False}).fillna(data[col])
+    return data
 
-for col in ("cache_hit", "fallback_triggered"):
-    if df[col].dtype == object:
-        df[col] = df[col].map({"True": True, "False": False}).fillna(df[col])
+
+df = load_data(CSV_PATH, os.path.getmtime(CSV_PATH))
 
 if search:
     df_view = df[df["prompt"].str.contains(search, case=False, na=False)]
